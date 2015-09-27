@@ -118,24 +118,29 @@ def tryDBSCAN( n = 10 , eps = 0.4):
     t = time.time()
     clusters, noise = DBSCAN( X ,  eps, M, normJ)
     s = "output"
-    s = s + str(n)
+    s = s + str(n) + ".log"
     textFile = open(s , "w")
     textFile.write( "cost: " + str(time.time() - t) )
+    textFile.write( "\n" )
 	
     print " --------------------------------------------------"
     print "cost: " + str(time.time() - t)
     print
     print "nb clusters"
     textFile.write( "nb clusters : " +str(len(clusters)))
+    textFile.write( "\n" )
     print len(clusters)
     print "length of each cluster"
     textFile.write( "length of each cluster" )
+    textFile.write( "\n" ) 
     for c in clusters:
         print "   > " + str(len(c))
         textFile.write( "   > " + str(len(c)) )
+        textFile.write( "\n" )
     print "noise qty"
     print len(noise)
     textFile.write( "noise qty" + str(len(noise)))
+    textFile.write( "\n" )
 
     noise_exist = 0
     if len(noise):
@@ -148,7 +153,10 @@ def tryDBSCAN( n = 10 , eps = 0.4):
     return
 
 
-tryDBSCAN()
+tryDBSCAN(10, 0.4)
+tryDBSCAN(100, 0.3)
+tryDBSCAN(1000, 0.15)
+
 	
 
 	
