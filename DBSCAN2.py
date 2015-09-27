@@ -77,7 +77,7 @@ def DBSCAN( X, eps, minPts, norm ):
     distances = np.empty(( X.shape[0], X.shape[0] ) )
     index = []
     #compute distances
-    pool = mp.Pool(4)
+    pool = mp.Pool()
     def f( x ):
         if i!=j:
             return normJ(x[0],x[1],X)
@@ -90,7 +90,7 @@ def DBSCAN( X, eps, minPts, norm ):
             
     dist_list =  pool.map(f, index)
     for k in range(0,len(index)):
-        distances[k[0, k[1]] ] = dist_list[k]
+        distances[index[k][0], index[k][1] ] = dist_list[k]
 #             if i != j:
 #                 d = norm(i,j,X)
 #                 distances[i,j] = d
