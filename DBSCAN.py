@@ -143,7 +143,7 @@ def tryDBSCAN( n = 10 , eps = 0.4):
     print "-------------------------------------------------- "
     print "nb clusters including noise" 
     print len(clusters) + noise_exist
-    textFile.write("nb clusters including noise" :  str(len(clusters) + noise_exist))
+    textFile.write("nb clusters including noise" + str(len(clusters) + noise_exist))
     print "-------------------------------------------------- "
     return
 
