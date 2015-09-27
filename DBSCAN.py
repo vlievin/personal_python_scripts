@@ -117,16 +117,25 @@ def tryDBSCAN( n = 10 , eps = 0.4):
     #X = scipy.sparse.csr_matrix( X )
     t = time.time()
     clusters, noise = DBSCAN( X ,  eps, M, normJ)
+	s = "output"
+	s = s + str(n)
+	textFile = open(s , "w")
+	textFile.write( "cost: " + str(time.time() - t) )
+	
     print " --------------------------------------------------"
     print "cost: " + str(time.time() - t)
     print
     print "nb clusters"
+	textFile.write( "nb clusters : " +str(len(clusters)))
     print len(clusters)
     print "length of each cluster"
+	textFile.write( "length of each cluster" )
     for c in clusters:
         print "   > " + str(len(c))
+		textFile.write( "   > " + str(len(c)) )
     print "noise qty"
     print len(noise)
+	textFile.write( "noise qty" + str(len(noise)))
 
     noise_exist = 0
     if len(noise):
@@ -134,6 +143,7 @@ def tryDBSCAN( n = 10 , eps = 0.4):
     print "-------------------------------------------------- "
     print "nb clusters including noise" 
     print len(clusters) + noise_exist
+	textFile.write("nb clusters including noise" :  str(len(clusters) + noise_exist))
     print "-------------------------------------------------- "
     return
 
