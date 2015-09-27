@@ -82,7 +82,7 @@ def DBSCAN( X, eps, minPts, norm ):
         tt = time.time() - t
         m = int(tt) / 15
         if m != m_last:
-            print " time : " + str( tt ) + "  point : " + str( k ) +  "  clusters : " + str(len(clusters))"  m: " + str(m)
+            #print " time : " + str( tt ) + "  point : " + str( k ) +  "  clusters : " + str(len(clusters)) +"  m: " + str(m)
             m_last = m
         if i not in ids_marked:
 #             print len(marked)
