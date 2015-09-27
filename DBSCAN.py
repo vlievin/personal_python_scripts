@@ -112,7 +112,7 @@ def tryDBSCAN( n = 10 , eps = 0.4):
     M = 2
     X = pickle.load(open('data_%dpoints_%ddims.dat' %(n,n), 'rb'))
     print " --------------------------------------------------"
-    print " loaded "
+    print " loaded | n = " + str(n)
     print " --------------------------------------------------"
     #X = scipy.sparse.csr_matrix( X )
     t = time.time()
