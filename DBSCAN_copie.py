@@ -1,14 +1,31 @@
-   
-def inter( i ,j,  A ):
+import cPickle as pickle
+import scipy
+import time
 
+#def norm
+
+def inter_preprocessing(x):
+    return x* .5
+    
+def inter( i ,j,  A ):
+    s = 0
     ri = A.getrow(i)
     rj = A.getrow(j)
-
-    l =  (ri * rj.transpose()).data
-    if len(l):
-        return (ri * rj.transpose()).data[0]
-    else:
-        return 0
+    r = (ri + rj).getrow(0)
+    r.data[:] = inter_preprocessing(r.data)
+    return len(r.nonzero()[1])
+        
+def union_bis( i,j, A ):
+    s = 0
+#     ri = A.getrow(i)
+#     rj = A.getrow(j)
+    for k in range(0 , A.shape[0]):
+        if ( A[i, k ] or  A[j , k] ) > 0:
+            s += 1
+#     print "u"
+#     print (ri + rj).nnz
+#     print s
+    return s
 
 def union( i,j, A ):
     return (A.getrow(i) + A.getrow(j)).nnz
@@ -16,18 +33,20 @@ def union( i,j, A ):
 def normJ( i , j, A ):
     return  float(1.0 - float(inter(i,j,A))/float(union(i,j,A)))
 	
+	
+#def regionQuery
 
-def regionQuery( i , eps , D , distances, ids_marked):
+def regionQuery( i , eps , D , norm, ids_marked):
     neighbors = []
     for j in range(0, D.shape[0]):
 #         if j not in ids_marked:
-        if distances[i,j] <= eps:
+        if norm(i, j, D) <= eps:
             neighbors.append(j)
             
     return neighbors
 	
-	
-def expandNewCluster( ids, D, eps, minPts, distances, ids_marked):
+#def expandNewCluster
+def expandNewCluster( ids, D, eps, minPts, norm, ids_marked):
     
     result = []
     j = 0
@@ -36,7 +55,7 @@ def expandNewCluster( ids, D, eps, minPts, distances, ids_marked):
         if i not in ids_marked:
             ids_marked.append(i)
             result.append( i )
-            neighbors2 = regionQuery( i , eps, D, distances, ids_marked)
+            neighbors2 = regionQuery( i , eps, D, norm, ids_marked)
             if len(neighbors2) >= minPts:   
                 for n in neighbors2:
                     if n not in ids_marked:
@@ -45,13 +64,8 @@ def expandNewCluster( ids, D, eps, minPts, distances, ids_marked):
                     
     return result
 	
-import time
-import numpy as np
-
+	
 def DBSCAN( X, eps, minPts, norm ):
-    
-    
-
     C = 0
     t = time.time()
     m_last = 0
@@ -59,29 +73,8 @@ def DBSCAN( X, eps, minPts, norm ):
     k = 0
     NOISE = []
     marked = []
-
-    distances = np.zeros(( X.shape[0], X.shape[0] ) )
-    index = []
-    #compute distances
-        
-    for i in range(0, X.shape[0]):
-        for j in range(0, X.shape[0]):
-            index.append( [i,j] )
-            
-    def f( x):
-#         if i!=j:
-        return normJ(x[0],x[1],X)
-#         else:
-#             return 0    
-                 
-    dist_list =  map(f, index)
-
-    for k in range(0,len(index)):
-        distances[index[k][0], index[k][1]] = dist_list[k]
-        distances[index[k][1], index[k][0]] = dist_list[k]
-         
-    print " distances have been computed in %s s" % str(time.time() - t)
-                
+    ids_to_process = range( 0 , X.shape[0] )
+    points_to_proces = X
     ids = range( 0 , X.shape[0] )
     ids_marked = []
     for i in ids:
@@ -93,10 +86,12 @@ def DBSCAN( X, eps, minPts, norm ):
             m_last = m
         if i not in ids_marked:
 #             print len(marked)
-            Neighbors = regionQuery( i , eps , X , distances, ids_marked)
+            Neighbors = regionQuery( i , eps , X , norm, ids_marked)
             #print " n size : " + str(len(Neighbors))
             if (len(Neighbors) >=  minPts):
-                C = expandNewCluster(  Neighbors, X , eps, minPts, distances, ids_marked)
+#                 print " : "
+                #points_to_proces = [ X[k,:] for k in ids_to_process]
+                C = expandNewCluster(  Neighbors, X , eps, minPts, norm, ids_marked)
                 clusters.append( C )
 #                 for p in C:
 #                     ids_marked.append(p)
@@ -108,6 +103,7 @@ def DBSCAN( X, eps, minPts, norm ):
             
     return clusters, NOISE
         
+		
 def tryDBSCAN( n = 10 , eps = 0.4):
     import cPickle as pickle
     import scipy
@@ -155,8 +151,18 @@ def tryDBSCAN( n = 10 , eps = 0.4):
     textFile.write("nb clusters including noise" + str(len(clusters) + noise_exist))
     print "-------------------------------------------------- "
     return
-	
+
+
 tryDBSCAN(10, 0.4)
 tryDBSCAN(100, 0.3)
 tryDBSCAN(1000, 0.15)
-tryDBSCAN(10000, 0.15)
+
+	
+
+	
+
+	
+	
+
+
+	
