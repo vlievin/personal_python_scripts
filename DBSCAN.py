@@ -1,4 +1,5 @@
-   
+import sys
+ 
 def inter( i ,j,  A ):
 
     ri = A.getrow(i)
@@ -159,7 +160,4 @@ def tryDBSCAN( n = 10 , eps = 0.4):
     print "-------------------------------------------------- "
     return
 	
-tryDBSCAN(10, 0.4)
-tryDBSCAN(100, 0.3)
-tryDBSCAN(1000, 0.15)
-tryDBSCAN(10000, 0.15)
+tryDBSCAN(sys.argv[1], sys.argv[2])
