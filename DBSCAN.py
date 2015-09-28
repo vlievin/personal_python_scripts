@@ -14,7 +14,10 @@ def union( i,j, A ):
     return (A.getrow(i) + A.getrow(j)).nnz
 
 def normJ( i , j, A ):
-    return  float(1.0 - float(inter(i,j,A))/float(union(i,j,A)))
+	if i != j:
+		return  float(1.0 - float(inter(i,j,A))/float(union(i,j,A)))
+	else:
+		return 0
 	
 
 def regionQuery( i , eps , D , distances, ids_marked):
