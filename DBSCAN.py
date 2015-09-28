@@ -160,4 +160,4 @@ def tryDBSCAN( n = 10 , eps = 0.4):
     print "-------------------------------------------------- "
     return
 	
-tryDBSCAN(sys.argv[1], sys.argv[2])
+tryDBSCAN(int(sys.argv[1]), float(sys.argv[2]))
